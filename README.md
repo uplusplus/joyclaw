@@ -45,7 +45,28 @@ DEEPSEEK_API_KEY=your_api_key_here
 ### 运行示例
 
 ```bash
+# 简单工具演示（无需 API Key）
+python examples/simple_demo.py
+
+# 完整 AI Agent 演示（需要 API Key 和网络）
 python examples/demo.py
+```
+
+## 🧪 测试
+
+### 本地功能测试（无需网络）
+```bash
+python test_local_features.py
+```
+
+### 完整集成测试（需要网络）
+```bash
+python test_integration.py
+```
+
+### 单元测试
+```bash
+python -m pytest tests/ -v
 ```
 
 ## 📁 项目结构
@@ -75,6 +96,18 @@ python -m pytest tests/ -v
 - ✅ 能安全处理本地设备基础操作
 - ✅ 结构清晰、易于后续扩展
 
+## 📊 测试状态
+
+| 功能模块 | 状态 | 说明 |
+|---------|------|------|
+| 文件工具 | ✅ 通过 | 创建、读取、列出文件功能正常 |
+| 命令工具 | ✅ 通过 | 安全命令执行、白名单机制正常 |
+| 系统信息 | ✅ 通过 | 系统信息查询功能正常 |
+| 安全机制 | ✅ 通过 | 路径限制、命令过滤正常 |
+| DeepSeek API | ⚠️ 待测 | 代码完成，需网络环境测试 |
+
+详细测试报告见 [TEST_REPORT.md](TEST_REPORT.md)
+
 ## 📄 许可证
 
 MIT License - 详见 [LICENSE](LICENSE) 文件
@@ -82,3 +115,9 @@ MIT License - 详见 [LICENSE](LICENSE) 文件
 ## 🤝 贡献
 
 欢迎提交 Issue 和 Pull Request！
+
+## 📚 相关文档
+
+- [开发总结](DEVELOPMENT_SUMMARY.md) - 开发过程总结
+- [测试报告](TEST_REPORT.md) - 详细测试报告
+- [推送说明](PUSH_INSTRUCTIONS.md) - GitHub 推送指南

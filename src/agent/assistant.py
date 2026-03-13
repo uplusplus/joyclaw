@@ -9,8 +9,12 @@ import re
 from typing import Optional, List, Dict, Any, Callable
 from enum import Enum
 
-from ..deepseek import DeepSeekClient
-from ..tools import FileTool, CommandTool, SystemInfoTool
+try:
+    from ..deepseek import DeepSeekClient
+    from ..tools import FileTool, CommandTool, SystemInfoTool
+except ImportError:
+    from deepseek import DeepSeekClient
+    from tools import FileTool, CommandTool, SystemInfoTool
 
 
 class ToolType(Enum):
