@@ -36,7 +36,7 @@ class CommandTools:
         
         try:
             result = subprocess.run(
-                command,
+                parts,  # 使用列表形式，不用 shell
                 shell=False,
                 capture_output=True,
                 text=True,

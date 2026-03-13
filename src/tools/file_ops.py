@@ -88,7 +88,12 @@ class FileTools:
     
     def _resolve_path(self, file_path: str) -> Path:
         """解析并验证路径安全性"""
-        path = Path(file_path).resolve()
+        # 如果是相对路径，基于 base_dir 解析
+        path = Path(file_path)
+        if not path.is_absolute():
+            path = self.base_dir / path
+        
+        path = path.resolve()
         
         # 防止目录遍历攻击
         if not str(path).startswith(str(self.base_dir)):
