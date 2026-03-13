@@ -1,0 +1,8 @@
+# DeepSeek API
+openai>=1.0.0
+
+# 本地操作
+python-dotenv>=1.0.0
+
+# 测试
+pytest>=7.0.0
