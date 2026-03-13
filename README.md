@@ -46,10 +46,21 @@ DEEPSEEK_API_KEY=your_api_key_here
 
 ```bash
 # 简单工具演示（无需 API Key）
-python examples/simple_demo.py
+python3 examples/simple_demo.py
 
-# 完整 AI Agent 演示（需要 API Key 和网络）
-python examples/demo.py
+# 完整 AI Agent 演示 - 工具直接调用（推荐）
+python3 examples/demo.py 5
+
+# 完整 AI Agent 演示 - 交互模式（需要 API Key）
+python3 examples/demo.py
+# 然后选择 1-6 选项
+
+# 或者指定其他演示模式
+python3 examples/demo.py 1  # 基本对话
+python3 examples/demo.py 2  # 文件操作
+python3 examples/demo.py 3  # 命令执行
+python3 examples/demo.py 4  # 交互式对话
+python3 examples/demo.py 6  # 运行所有演示
 ```
 
 ## 🧪 测试

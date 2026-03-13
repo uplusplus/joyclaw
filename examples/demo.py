@@ -163,22 +163,37 @@ def demo_tools_directly():
 
 def main():
     """主函数"""
+    import sys
+    
     print("\n" + "=" * 60)
     print("  JoyClaw AI Agent 演示")
     print("  基于 DeepSeek 的本地设备 AI Agent")
     print("=" * 60)
     
-    print("\n请选择演示模式:")
-    print("1. 基本对话演示")
-    print("2. 文件操作演示")
-    print("3. 命令执行演示")
-    print("4. 交互式对话")
-    print("5. 工具直接调用演示")
-    print("6. 运行所有演示")
+    # 支持命令行参数
+    if len(sys.argv) > 1:
+        choice = sys.argv[1]
+        print(f"\n使用命令行参数: {choice}")
+    else:
+        print("\n请选择演示模式:")
+        print("1. 基本对话演示")
+        print("2. 文件操作演示")
+        print("3. 命令执行演示")
+        print("4. 交互式对话")
+        print("5. 工具直接调用演示")
+        print("6. 运行所有演示")
+        print("\n提示: 也可以直接运行 'python demo.py 5' 来指定模式")
+        
+        try:
+            choice = input("\n请输入选项 (1-6): ").strip()
+            if not choice:
+                choice = '5'  # 空输入默认运行工具演示
+        except EOFError:
+            # 非交互环境，默认运行工具演示
+            print("\n检测到非交互环境，默认运行工具直接调用演示...")
+            choice = '5'
     
     try:
-        choice = input("\n请输入选项 (1-6): ").strip()
-        
         if choice == '1':
             demo_basic_chat()
         elif choice == '2':
