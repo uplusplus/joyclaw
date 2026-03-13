@@ -16,4 +16,5 @@ build/
 
 # Test artifacts
 test_hello.txt
+demo_test.txt
 .pytest_cache/
