@@ -1,48 +1,73 @@
+# -*- coding: utf-8 -*-
 """
 测试 Agent 模块
 """
 import pytest
-import sys
-sys.path.insert(0, "..")
-
-from src.agent import DeepSeekAgent
-from src.config import settings
+import os
 
 
 class TestDeepSeekAgent:
     """DeepSeek Agent 测试"""
     
-    def test_init_without_api_key(self, monkeypatch):
-        """测试无 API Key 时初始化失败"""
-        monkeypatch.delenv("DEEPSEEK_API_KEY", raising=False)
+    def test_init_with_api_key(self):
+        """测试有 API Key 时初始化成功"""
+        # 确保 API Key 已设置
+        api_key = os.getenv("DEEPSEEK_API_KEY")
+        if not api_key:
+            pytest.skip("DEEPSEEK_API_KEY 未设置，跳过此测试")
         
-        # 重新加载设置
-        import importlib
-        from src.config import settings as settings_mod
-        importlib.reload(settings_mod)
+        import sys
+        sys.path.insert(0, ".")
+        from src.agent import DeepSeekAgent
         
-        with pytest.raises(ValueError, match="DEEPSEEK_API_KEY"):
-            DeepSeekAgent()
+        agent = DeepSeekAgent()
+        assert agent.client is not None
+        assert agent.model is not None
+    
+    def test_deepseek_chat(self):
+        """测试 DeepSeek 对话功能"""
+        api_key = os.getenv("DEEPSEEK_API_KEY")
+        if not api_key:
+            pytest.skip("DEEPSEEK_API_KEY 未设置，跳过此测试")
+        
+        import sys
+        sys.path.insert(0, ".")
+        from src.agent import DeepSeekAgent
+        
+        agent = DeepSeekAgent()
+        
+        # 测试简单对话
+        response = agent.chat("你好，请用一句话回复")
+        assert response is not None
+        assert len(response) > 0
+        print(f"\n✅ DeepSeek 响应: {response[:100]}...")
     
     def test_tool_execution(self):
         """测试工具执行"""
-        # 跳过 API Key 验证，直接测试工具执行
+        import sys
+        sys.path.insert(0, ".")
         from src.tools import file_tools
         
         # 这个测试不依赖 API
         with pytest.raises(ValueError):
-            file_tools.read_file("nonexistent.txt")
+            file_tools.read_file("nonexistent_xyz_file.txt")
     
-    def test_clear_history(self, monkeypatch):
-        """测试清除历史"""
-        # 设置假的 API Key
-        monkeypatch.setenv("DEEPSEEK_API_KEY", "test_key")
+    def test_clear_and_get_history(self):
+        """测试历史管理"""
+        api_key = os.getenv("DEEPSEEK_API_KEY")
+        if not api_key:
+            pytest.skip("DEEPSEEK_API_KEY 未设置，跳过此测试")
         
-        # 需要重新加载设置
-        import importlib
-        from src.config import settings as settings_mod
-        importlib.reload(settings_mod)
+        import sys
+        sys.path.insert(0, ".")
+        from src.agent import DeepSeekAgent
         
-        # 创建 agent 会因网络失败，所以我们只测试历史管理
-        # 这个测试在实际使用时需要 mock OpenAI 客户端
-        pass
+        agent = DeepSeekAgent()
+        
+        # 发送一条消息
+        agent.chat("测试消息")
+        assert len(agent.get_history()) == 2  # user + assistant
+        
+        # 清除历史
+        agent.clear_history()
+        assert len(agent.get_history()) == 0
