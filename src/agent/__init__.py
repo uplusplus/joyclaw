@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
 """Agent 模块"""
-from .agent import DeepSeekAgent
+from .agent import LLMAgent, DeepSeekAgent
 
-__all__ = ["DeepSeekAgent"]
+__all__ = ["LLMAgent", "DeepSeekAgent"]

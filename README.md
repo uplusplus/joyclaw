@@ -58,3 +58,53 @@ python examples/demo.py
 ## 6 许可证
 
 MIT License - 详见 [LICENSE](LICENSE)
+
+---
+
+## 7 开发计划：支持 OpenAI API 兼容的多种 LLM
+
+### 7.1 需求背景
+当前 Agent 仅支持 DeepSeek，需要扩展为支持所有 OpenAI API 兼容的 LLM 服务，包括但不限于：
+- OpenAI (GPT-4, GPT-3.5)
+- DeepSeek
+- 智谱 AI (GLM)
+- 月之暗面 (Moonshot)
+- 本地部署模型 (Ollama, vLLM 等)
+- 其他兼容 OpenAI API 的服务
+
+### 7.2 开发任务
+
+| 序号 | 任务 | 说明 | 状态 |
+|------|------|------|------|
+| 1 | 重构配置模块 | 支持多 LLM 配置，API Key、Base URL、模型名称均可配置 | ✅ 完成 |
+| 2 | 重构 Agent 初始化 | 从硬编码 DeepSeek 改为通用 LLM 客户端 | ✅ 完成 |
+| 3 | 添加 LLM 提供商预设 | 提供常用 LLM 的默认配置模板 | ✅ 完成 |
+| 4 | 更新 .env.example | 添加新配置项示例 | ✅ 完成 |
+| 5 | 更新测试用例 | 支持多 LLM 测试 | ✅ 完成 |
+| 6 | 更新 Demo | 展示多 LLM 切换能力 | ✅ 完成 |
+
+### 7.3 配置设计
+
+```bash
+# .env 配置示例
+# LLM 提供商选择
+LLM_PROVIDER=deepseek  # openai, deepseek, zhipu, moonshot, ollama, custom
+
+# 通用配置 (适用于所有提供商)
+LLM_API_KEY=your_api_key
+LLM_BASE_URL=https://api.deepseek.com/v1
+LLM_MODEL=deepseek-chat
+
+# 或使用提供商预设 (自动填充 base_url)
+# LLM_PROVIDER=openai
+# LLM_API_KEY=sk-xxx
+# LLM_MODEL=gpt-4
+```
+
+### 7.4 验收标准
+
+- [x] 支持通过环境变量切换不同 LLM 提供商
+- [x] 支持自定义 Base URL（兼容本地部署）
+- [x] 提供常用 LLM 预设配置
+- [x] 所有测试用例通过
+- [x] Demo 展示多 LLM 切换
