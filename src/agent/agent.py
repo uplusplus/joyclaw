@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-DeepSeek Agent 核心实现
+LLM Agent 核心实现 - 支持 OpenAI API 兼容的多种 LLM
 """
 from openai import OpenAI
 from typing import Optional, List, Dict
@@ -8,8 +8,8 @@ from ..config.settings import settings
 from ..tools import file_tools, command_tools
 
 
-class DeepSeekAgent:
-    """DeepSeek AI Agent"""
+class LLMAgent:
+    """通用 LLM Agent (支持 OpenAI API 兼容的各种 LLM)"""
     
     def __init__(self, system_prompt: Optional[str] = None):
         """初始化 Agent
@@ -19,17 +19,21 @@ class DeepSeekAgent:
         """
         settings.validate()
         
+        # 使用通用配置
+        llm_config = settings.get_llm_config()
+        
         self.client = OpenAI(
-            api_key=settings.DEEPSEEK_API_KEY,
-            base_url=settings.DEEPSEEK_BASE_URL
+            api_key=llm_config["api_key"],
+            base_url=llm_config["base_url"]
         )
-        self.model = settings.DEEPSEEK_MODEL
+        self.model = llm_config["model"]
+        self.provider = llm_config["provider"]
         self.system_prompt = system_prompt or self._default_system_prompt()
         self.messages: List[Dict[str, str]] = []
     
     def _default_system_prompt(self) -> str:
         """默认系统提示词"""
-        return """你是一个有用的 AI 助手，可以帮助用户完成任务。
+        return f"""你是一个有用的 AI 助手，基于 {self.provider} 模型，可以帮助用户完成任务。
 
 你具有以下能力：
 1. 与用户进行自然语言对话
@@ -54,7 +58,7 @@ class DeepSeekAgent:
         # 添加用户消息
         self.messages.append({"role": "user", "content": user_input})
         
-        # 调用 DeepSeek API
+        # 调用 LLM API
         response = self.client.chat.completions.create(
             model=self.model,
             messages=[
@@ -107,3 +111,11 @@ class DeepSeekAgent:
     def get_history(self) -> List[Dict[str, str]]:
         """获取对话历史"""
         return self.messages.copy()
+
+
+# 兼容性别名 (向后兼容旧代码)
+DeepSeekAgent = LLMAgent
+
+
+# 兼容性别名 - 保持旧代码向后兼容
+DeepSeekAgent = LLMAgent

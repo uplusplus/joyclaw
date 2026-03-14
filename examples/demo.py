@@ -2,18 +2,33 @@
 # -*- coding: utf-8 -*-
 """
 JoyClaw 演示脚本
-演示 Agent 与 DeepSeek 的基本交互和本地操作能力
+演示 Agent 与多种 LLM 的交互和本地操作能力
 """
 import sys
 sys.path.insert(0, "..")
 
-from src.agent import DeepSeekAgent
+from src.agent import LLMAgent
 from src.tools import file_tools, command_tools
+from src.config.settings import settings
+
+
+def demo_config():
+    """演示配置能力"""
+    print("=" * 50)
+    print("⚙️  配置信息")
+    print("=" * 50)
+    
+    llm_config = settings.get_llm_config()
+    print(f"\n当前 LLM 配置:")
+    print(f"  Provider: {llm_config['provider']}")
+    print(f"  Model: {llm_config['model']}")
+    print(f"  Base URL: {llm_config['base_url']}")
+    print(f"  API Key: {llm_config['api_key'][:10]}...")
 
 
 def demo_tools():
     """演示工具能力"""
-    print("=" * 50)
+    print("\n" + "=" * 50)
     print("🔧 工具能力演示")
     print("=" * 50)
     
@@ -46,7 +61,8 @@ def demo_agent():
     print("=" * 50)
     
     try:
-        agent = DeepSeekAgent()
+        agent = LLMAgent()
+        print(f"\n当前使用: {agent.provider} ({agent.model})")
         
         # 测试对话
         questions = [
@@ -62,7 +78,7 @@ def demo_agent():
             
     except ValueError as e:
         print(f"\n⚠️  配置错误: {e}")
-        print("请设置环境变量 DEEPSEEK_API_KEY")
+        print("请设置环境变量 LLM_API_KEY 或 DEEPSEEK_API_KEY")
 
 
 def demo_interactive():
@@ -72,7 +88,8 @@ def demo_interactive():
     print("=" * 50)
     
     try:
-        agent = DeepSeekAgent()
+        agent = LLMAgent()
+        print(f"\n当前使用: {agent.provider} ({agent.model})")
         
         while True:
             user_input = input("\n👤 你: ").strip()
@@ -89,12 +106,15 @@ def demo_interactive():
             
     except ValueError as e:
         print(f"\n⚠️  配置错误: {e}")
-        print("请设置环境变量 DEEPSEEK_API_KEY")
+        print("请设置环境变量 LLM_API_KEY 或 DEEPSEEK_API_KEY")
 
 
 def main():
     """主函数"""
     print("\n🎯 JoyClaw AI Agent 演示")
+    
+    # 配置演示
+    demo_config()
     
     # 工具演示
     demo_tools()
