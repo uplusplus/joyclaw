@@ -11,10 +11,9 @@ class TestLLMAgent:
     
     def test_init_with_api_key(self):
         """测试有 API Key 时初始化成功"""
-        # 确保 API Key 已设置 (新配置或旧配置)
-        api_key = os.getenv("LLM_API_KEY") or os.getenv("DEEPSEEK_API_KEY")
+        api_key = os.getenv("LLM_API_KEY")
         if not api_key:
-            pytest.skip("LLM_API_KEY 或 DEEPSEEK_API_KEY 未设置，跳过此测试")
+            pytest.skip("LLM_API_KEY 未设置，跳过此测试")
         
         import sys
         sys.path.insert(0, ".")
@@ -28,9 +27,9 @@ class TestLLMAgent:
     
     def test_llm_chat(self):
         """测试 LLM 对话功能"""
-        api_key = os.getenv("LLM_API_KEY") or os.getenv("DEEPSEEK_API_KEY")
+        api_key = os.getenv("LLM_API_KEY")
         if not api_key:
-            pytest.skip("LLM_API_KEY 或 DEEPSEEK_API_KEY 未设置，跳过此测试")
+            pytest.skip("LLM_API_KEY 未设置，跳过此测试")
         
         import sys
         sys.path.insert(0, ".")
@@ -56,9 +55,9 @@ class TestLLMAgent:
     
     def test_clear_and_get_history(self):
         """测试历史管理"""
-        api_key = os.getenv("LLM_API_KEY") or os.getenv("DEEPSEEK_API_KEY")
+        api_key = os.getenv("LLM_API_KEY")
         if not api_key:
-            pytest.skip("LLM_API_KEY 或 DEEPSEEK_API_KEY 未设置，跳过此测试")
+            pytest.skip("LLM_API_KEY 未设置，跳过此测试")
         
         import sys
         sys.path.insert(0, ".")
@@ -73,25 +72,3 @@ class TestLLMAgent:
         # 清除历史
         agent.clear_history()
         assert len(agent.get_history()) == 0
-
-
-class TestBackwardsCompatibility:
-    """向后兼容性测试"""
-    
-    def test_deepseek_agent_alias(self):
-        """测试 DeepSeekAgent 别名仍然可用"""
-        api_key = os.getenv("LLM_API_KEY") or os.getenv("DEEPSEEK_API_KEY")
-        if not api_key:
-            pytest.skip("LLM_API_KEY 或 DEEPSEEK_API_KEY 未设置，跳过此测试")
-        
-        import sys
-        sys.path.insert(0, ".")
-        from src.agent import DeepSeekAgent, LLMAgent
-        
-        # 验证别名
-        assert DeepSeekAgent is LLMAgent
-        
-        # 验证可以正常实例化
-        agent = DeepSeekAgent()
-        assert agent.client is not None
-        print("\n✅ 向后兼容性测试通过")
