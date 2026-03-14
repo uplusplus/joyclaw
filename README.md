@@ -128,6 +128,30 @@ LLM_MODEL=llama2
 | 月之暗面 | moonshot | moonshot-v1-8k | https://api.moonshot.cn/v1 |
 | Ollama | ollama | llama2 | http://localhost:11434/v1 |
 
-## 8 许可证
+## 8 更新日志
+
+### 2026-03-14 - Function Calling 支持
+
+**新增功能：**
+- ✅ 实现 OpenAI Function Calling，Agent 可自动调用工具
+- ✅ 支持自然语言操作文件（创建、读取、列出目录）
+- ✅ 支持自然语言执行安全命令
+- ✅ 添加 `tool_schemas.py` 定义工具 schema
+
+**修复：**
+- 🐛 修复 `demo.py` 路径问题，支持从任意目录运行
+
+**验证：**
+- 所有测试通过 (11 tests)
+- 功能验证：自然语言创建文件、读取文件、列出目录均正常
+
+### 2026-03-13 - 多 LLM 支持
+
+**新增功能：**
+- ✅ 支持 5 种 LLM 提供商：OpenAI, DeepSeek, 智谱 AI, 月之暗面, Ollama
+- ✅ 统一配置系统 (`LLM_PROVIDER`, `LLM_API_KEY`, `LLM_MODEL`, `LLM_BASE_URL`)
+- ✅ 预设配置简化使用
+
+## 9 许可证
 
 MIT License - 详见 [LICENSE](LICENSE)
