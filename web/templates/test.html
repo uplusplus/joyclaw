@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>JoyClaw 测试页面</title>
+</head>
+<body>
+    <h1>JoyClaw AI Agent</h1>
+    <p>如果你能看到这个页面，说明 Web 服务正在运行！</p>
+    
+    <h2>测试 API</h2>
+    <button onclick="testSystem()">测试系统信息</button>
+    <button onclick="testFiles()">测试文件列表</button>
+    <button onclick="testCommand()">测试命令</button>
+    
+    <div id="result" style="margin-top:20px; padding:10px; border:1px solid #ccc; min-height:100px;">
+        结果将显示在这里
+    </div>
+    
+    <script>
+        async function testSystem() {
+            try {
+                const res = await fetch('/api/system/info');
+                const data = await res.json();
+                document.getElementById('result').innerHTML = 
+                    '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
+            } catch(e) {
+                document.getElementById('result').innerHTML = '错误: ' + e.message;
+            }
+        }
+        
+        async function testFiles() {
+            try {
+                const res = await fetch('/api/files/list?directory=.');
+                const data = await res.json();
+                document.getElementById('result').innerHTML = 
+                    '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
+            } catch(e) {
+                document.getElementById('result').innerHTML = '错误: ' + e.message;
+            }
+        }
+        
+        async function testCommand() {
+            try {
+                const res = await fetch('/api/command/execute', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({command: 'echo Hello'})
+                });
+                const data = await res.json();
+                document.getElementById('result').innerHTML = 
+                    '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
+            } catch(e) {
+                document.getElementById('result').innerHTML = '错误: ' + e.message;
+            }
+        }
+    </script>
+</body>
+</html>

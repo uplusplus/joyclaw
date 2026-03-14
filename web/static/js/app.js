@@ -3,14 +3,48 @@
 // API 基础路径
 const API_BASE = '/api';
 
-// 显示加载动画
-function showLoading() {
-    document.getElementById('loading').style.display = 'flex';
+// 显示加载动画（仅在对话区域）
+function showLoading(message = '处理中...') {
+    const loadingDiv = document.getElementById('loading');
+    if (loadingDiv) {
+        loadingDiv.innerHTML = `
+            <div class="spinner"></div>
+            <span class="loading-text">${message}</span>
+        `;
+        loadingDiv.classList.add('show');
+    }
 }
 
 // 隐藏加载动画
 function hideLoading() {
-    document.getElementById('loading').style.display = 'none';
+    const loadingDiv = document.getElementById('loading');
+    if (loadingDiv) {
+        loadingDiv.classList.remove('show');
+    }
+}
+
+// 显示对话加载状态
+function showChatLoading() {
+    const messagesDiv = document.getElementById('chat-messages');
+    const loadingDiv = document.createElement('div');
+    loadingDiv.id = 'chat-loading-indicator';
+    loadingDiv.className = 'message assistant';
+    loadingDiv.innerHTML = `
+        <div class="message-content">
+            <div class="spinner" style="width:16px;height:16px;border-width:2px;"></div>
+            <span style="margin-left:8px;">AI 正在思考...</span>
+        </div>
+    `;
+    messagesDiv.appendChild(loadingDiv);
+    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+}
+
+// 隐藏对话加载状态
+function hideChatLoading() {
+    const loadingDiv = document.getElementById('chat-loading-indicator');
+    if (loadingDiv) {
+        loadingDiv.remove();
+    }
 }
 
 // 显示面板
@@ -41,8 +75,9 @@ async function sendMessage() {
     addMessage('user', message);
     input.value = '';
     
-    // 调用 API
-    showLoading();
+    // 显示对话加载状态
+    showChatLoading();
+    
     try {
         const response = await fetch(`${API_BASE}/chat`, {
             method: 'POST',
@@ -52,15 +87,17 @@ async function sendMessage() {
         
         const data = await response.json();
         
+        // 隐藏加载状态
+        hideChatLoading();
+        
         if (data.success) {
             addMessage('assistant', data.response);
         } else {
             addMessage('assistant', `错误: ${data.error}`);
         }
     } catch (error) {
+        hideChatLoading();
         addMessage('assistant', `网络错误: ${error.message}`);
-    } finally {
-        hideLoading();
     }
 }
 

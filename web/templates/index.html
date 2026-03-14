@@ -55,6 +55,8 @@
                             </div>
                         </div>
                     </div>
+                    <!-- 加载状态显示区域 -->
+                    <div id="loading" class="loading"></div>
                 </div>
                 <div class="chat-input">
                     <textarea id="user-input" placeholder="输入消息... (按 Ctrl+Enter 发送)" rows="3"></textarea>
@@ -128,11 +130,6 @@
                 </div>
             </div>
         </div>
-    </div>
-    
-    <!-- 加载动画 -->
-    <div id="loading" class="loading" style="display: none;">
-        <div class="spinner"></div>
     </div>
     
     <script src="{{ url_for('static', filename='js/app.js') }}"></script>
