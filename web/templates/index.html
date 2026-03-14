@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JoyClaw AI Agent</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <!-- 侧边栏 -->
+        <div class="sidebar">
+            <div class="logo">
+                <h1>🦞 JoyClaw</h1>
+                <p>AI Agent</p>
+            </div>
+            
+            <div class="menu">
+                <button class="menu-item active" onclick="showPanel('chat')">
+                    <span class="icon">💬</span>
+                    <span>对话</span>
+                </button>
+                <button class="menu-item" onclick="showPanel('files')">
+                    <span class="icon">📁</span>
+                    <span>文件</span>
+                </button>
+                <button class="menu-item" onclick="showPanel('command')">
+                    <span class="icon">⚡</span>
+                    <span>命令</span>
+                </button>
+                <button class="menu-item" onclick="showPanel('system')">
+                    <span class="icon">💻</span>
+                    <span>系统</span>
+                </button>
+            </div>
+            
+            <div class="sidebar-footer">
+                <p>© 2026 JoyClaw</p>
+            </div>
+        </div>
+        
+        <!-- 主内容区 -->
+        <div class="main">
+            <!-- 对话面板 -->
+            <div id="chat-panel" class="panel active">
+                <div class="panel-header">
+                    <h2>💬 AI 对话</h2>
+                    <button class="btn-secondary" onclick="clearHistory()">清空历史</button>
+                </div>
+                <div class="chat-container">
+                    <div id="chat-messages" class="chat-messages">
+                        <div class="message system">
+                            <div class="message-content">
+                                你好！我是 JoyClaw AI Agent，可以帮助你操作本地设备、管理文件、执行命令等。
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="chat-input">
+                    <textarea id="user-input" placeholder="输入消息... (按 Ctrl+Enter 发送)" rows="3"></textarea>
+                    <button class="btn-primary" onclick="sendMessage()">发送</button>
+                </div>
+            </div>
+            
+            <!-- 文件面板 -->
+            <div id="files-panel" class="panel">
+                <div class="panel-header">
+                    <h2>📁 文件管理</h2>
+                </div>
+                <div class="files-toolbar">
+                    <input type="text" id="file-directory" placeholder="目录路径" value=".">
+                    <input type="text" id="file-pattern" placeholder="文件模式 (如 *.txt)">
+                    <button class="btn-primary" onclick="listFiles()">列出文件</button>
+                </div>
+                <div class="files-container">
+                    <div id="files-list" class="files-list">
+                        <p class="empty-message">点击"列出文件"查看文件列表</p>
+                    </div>
+                    <div id="file-content" class="file-content">
+                        <p class="empty-message">选择文件查看内容</p>
+                    </div>
+                </div>
+                <div class="files-editor">
+                    <h3>文件编辑器</h3>
+                    <input type="text" id="edit-file-path" placeholder="文件路径">
+                    <textarea id="edit-file-content" placeholder="文件内容" rows="10"></textarea>
+                    <div class="button-group">
+                        <button class="btn-primary" onclick="writeFile()">保存文件</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 命令面板 -->
+            <div id="command-panel" class="panel">
+                <div class="panel-header">
+                    <h2>⚡ 命令执行</h2>
+                </div>
+                <div class="command-input">
+                    <input type="text" id="command-input" placeholder="输入命令 (如 ls, pwd, echo 'hello')">
+                    <input type="text" id="command-cwd" placeholder="工作目录 (可选)">
+                    <button class="btn-primary" onclick="executeCommand()">执行</button>
+                </div>
+                <div class="command-result">
+                    <h3>执行结果</h3>
+                    <div id="command-output" class="command-output">
+                        <p class="empty-message">执行命令后显示结果</p>
+                    </div>
+                </div>
+                <div class="command-history">
+                    <h3>常用命令</h3>
+                    <div class="quick-commands">
+                        <button class="btn-secondary" onclick="quickCommand('pwd')">显示目录</button>
+                        <button class="btn-secondary" onclick="quickCommand('date')">显示日期</button>
+                        <button class="btn-secondary" onclick="quickCommand('whoami')">当前用户</button>
+                        <button class="btn-secondary" onclick="quickCommand('ls')">列出文件</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 系统面板 -->
+            <div id="system-panel" class="panel">
+                <div class="panel-header">
+                    <h2>💻 系统信息</h2>
+                    <button class="btn-primary" onclick="getSystemInfo()">刷新</button>
+                </div>
+                <div id="system-info" class="system-info">
+                    <p class="empty-message">点击"刷新"获取系统信息</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 加载动画 -->
+    <div id="loading" class="loading" style="display: none;">
+        <div class="spinner"></div>
+    </div>
+    
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
