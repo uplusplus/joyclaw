@@ -29,6 +29,10 @@ LLM_PRESETS = {
         "base_url": "http://localhost:11434/v1",
         "default_model": "llama2",
     },
+    "hw": {
+        "base_url": "http://api.openai.rnd.huawei.com/v1",
+        "default_model": "gpt-oss-120b",
+    },
 }
 
 
@@ -36,17 +40,12 @@ class Settings:
     """应用配置"""
     
     # LLM 提供商
-    LLM_PROVIDER: str = os.getenv("LLM_PROVIDER", "deepseek")
+    LLM_PROVIDER: str = os.getenv("LLM_PROVIDER", "hw")
     
-    # 通用 LLM 配置（优先使用显式配置，否则使用预设）
-    LLM_API_KEY: str = os.getenv("LLM_API_KEY", os.getenv("DEEPSEEK_API_KEY", ""))
+    # LLM 配置（优先使用显式配置，否则使用预设）
+    LLM_API_KEY: str = os.getenv("LLM_API_KEY", "")
     LLM_BASE_URL: str = os.getenv("LLM_BASE_URL", "")
     LLM_MODEL: str = os.getenv("LLM_MODEL", "")
-    
-    # 兼容旧配置
-    DEEPSEEK_API_KEY: str = os.getenv("DEEPSEEK_API_KEY", "")
-    DEEPSEEK_BASE_URL: str = os.getenv("DEEPSEEK_BASE_URL", "")
-    DEEPSEEK_MODEL: str = os.getenv("DEEPSEEK_MODEL", "")
     
     # 安全配置
     ALLOWED_COMMANDS: list = os.getenv("ALLOWED_COMMANDS", "ls,cat,echo,pwd,whoami,date").split(",")
@@ -55,20 +54,18 @@ class Settings:
     @classmethod
     def _resolve_llm_config(cls):
         """解析 LLM 配置，处理预设和默认值"""
-        # 优先级：显式配置 > 预设 > 旧配置 > 默认值
-        
         # API Key
-        api_key = cls.LLM_API_KEY or cls.DEEPSEEK_API_KEY
+        api_key = cls.LLM_API_KEY
         if not api_key and cls.LLM_PROVIDER == "ollama":
             api_key = "ollama"  # Ollama 不需要真实 key
         
-        # Base URL
-        base_url = cls.LLM_BASE_URL or cls.DEEPSEEK_BASE_URL
+        # Base URL: 显式配置 > 预设
+        base_url = cls.LLM_BASE_URL
         if not base_url and cls.LLM_PROVIDER in LLM_PRESETS:
             base_url = LLM_PRESETS[cls.LLM_PROVIDER]["base_url"]
         
-        # Model
-        model = cls.LLM_MODEL or cls.DEEPSEEK_MODEL
+        # Model: 显式配置 > 预设
+        model = cls.LLM_MODEL
         if not model and cls.LLM_PROVIDER in LLM_PRESETS:
             model = LLM_PRESETS[cls.LLM_PROVIDER]["default_model"]
         
@@ -90,7 +87,7 @@ class Settings:
         """验证必要配置"""
         api_key, base_url, model = cls._resolve_llm_config()
         if not api_key:
-            raise ValueError("LLM_API_KEY 或 DEEPSEEK_API_KEY 环境变量未设置")
+            raise ValueError("LLM_API_KEY 环境变量未设置")
         if not base_url:
             raise ValueError("LLM_BASE_URL 未设置且无预设配置")
         if not model:

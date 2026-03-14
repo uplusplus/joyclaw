@@ -2,10 +2,13 @@
 # -*- coding: utf-8 -*-
 """
 JoyClaw 演示脚本
-演示 Agent 与多种 LLM 的交互和本地操作能力
+演示 Agent 与多种 LLM 的基本交互和本地操作能力
 """
 import sys
-sys.path.insert(0, "..")
+import os
+# 获取项目根目录 (examples 的父目录)
+_project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, _project_root)
 
 from src.agent import LLMAgent
 from src.tools import file_tools, command_tools
@@ -13,17 +16,16 @@ from src.config.settings import settings
 
 
 def demo_config():
-    """演示配置能力"""
+    """演示配置信息"""
     print("=" * 50)
-    print("⚙️  配置信息")
+    print("⚙️  LLM 配置信息")
     print("=" * 50)
     
     llm_config = settings.get_llm_config()
-    print(f"\n当前 LLM 配置:")
-    print(f"  Provider: {llm_config['provider']}")
-    print(f"  Model: {llm_config['model']}")
-    print(f"  Base URL: {llm_config['base_url']}")
-    print(f"  API Key: {llm_config['api_key'][:10]}...")
+    print(f"\n提供商: {llm_config['provider']}")
+    print(f"模型: {llm_config['model']}")
+    print(f"Base URL: {llm_config['base_url']}")
+    print(f"API Key: {llm_config['api_key'][:8]}... (已隐藏)")
 
 
 def demo_tools():
@@ -62,7 +64,6 @@ def demo_agent():
     
     try:
         agent = LLMAgent()
-        print(f"\n当前使用: {agent.provider} ({agent.model})")
         
         # 测试对话
         questions = [
@@ -89,7 +90,6 @@ def demo_interactive():
     
     try:
         agent = LLMAgent()
-        print(f"\n当前使用: {agent.provider} ({agent.model})")
         
         while True:
             user_input = input("\n👤 你: ").strip()
@@ -113,7 +113,7 @@ def main():
     """主函数"""
     print("\n🎯 JoyClaw AI Agent 演示")
     
-    # 配置演示
+    # 配置信息
     demo_config()
     
     # 工具演示
